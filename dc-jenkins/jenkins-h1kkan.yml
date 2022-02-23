@@ -2,7 +2,6 @@ version: '2'
 
 services:
    jenkins:
-     #image: 'h1kkan/jenkins-docker:2.303.1'
     image: 'h1kkan/jenkins-docker:2.319.3'
     container_name: dc-jenkins
     user: root
