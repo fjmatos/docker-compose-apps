@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+   jenkins:
+     #image: 'h1kkan/jenkins-docker:2.303.1'
+    image: 'h1kkan/jenkins-docker:2.319.3'
+    container_name: container-jenkins
+    build:
+      context: jenkins-nexus-h1kkan/
+    user: root
+    ports:
+      - '8282:8282'
+      - '8443:8443'
+      - '50000:50000'
+    volumes:
+      - 'jenkins-data:/var/jenkins_home'
+    environment:
+      - JENKINS_OPTS="--httpPort=8282"
+      - JAVA_OPTS="-Duser.timezone=Europe/Madrid -Djava.awt.headless=true -Dhudson.model.DirectoryBrowserSupport.CSP=\'default-src "self" "unsafe-inline" "unsafe-eval"; img-src "self" "unsafe-inline" data:; style-src "unsafe-inline";\'"
+      - PIP_CONFIG_FILE=/var/jenkins_home/.pip/pip.conf
+    restart: always
+
+   nexus:
+     image: sonatype/nexus3:3.34.1
+     container_name: container-nexus
+     ports:
+       - '8081:8081'
+     depends_on:
+       - 'jenkins'
+     volumes:
+       - 'nexus-data:/nexus-data'
+     restart:
+        always
+
+volumes:
+  jenkins-data: {}
+  nexus-data: {}
+
